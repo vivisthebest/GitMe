@@ -9,16 +9,17 @@ app.controller ("MainDataController", "$scope", function ($scope) {
     $scope.languages = {};
     $scope.commits = 0;
     $scope.open_issues = 0;
+    // sunday - saturday (0 - 6)
     $scope.weekday_avgs = {
-        "Sunday": 0,
-        "Monday": 0,
-        "Tuesday": 0,
-        "Wednesday": 0,
-        "Thursday": 0,
-        "Friday": 0,
-        "Saturday": 0
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0
     };
-
+    $scope.collaborators = {};
     $scope.followers = 0;
     $scope.downloads = 0;
 
@@ -30,24 +31,44 @@ app.controller ("MainDataController", "$scope", function ($scope) {
             }
 
             $scope.repos = data;
+
+            $.ajax('api.github.com/users/'+$scope.name, function (data, e) {
+                $scope.num_repos = data['public_repos'];
+            });
+
             $scope.repos.forEach(function (el, i, arr) {
                 $scope.stars += el['stargazers_count'];
                 $scope.watchers += el['watchers_count'];
                 $scope.open_issues += el['open_issues_count'];
-                $scope.num_repos++;
-                $.ajax('api.github.com/repos/'+$scope.name+el['name']+"/languages", function (data, e) {
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+"/languages", function (data, e) {
                     Object.keys(data).forEach(function (el, i, arr) {
-                        if($scope.languages[el] != undefined) {
+                        if($scope.languages[el] == undefined) {
                             $scope.languages[el] = 0;
                         }
                         $scope.languages[el] += data[el];
                     });
 
                 });
-            });
+
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'stats/punch_card', function(data, e) {
+                    data.forEach(function(el, i, arr) {
+                        $scope.weekday_avgs[el[0]] += (el[2] / $scope.num_repos);
+                    });
+                });
+
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'/collaborators', function(data, e) {
+                    data.forEach(function(el, i, arr) {
+                        if($scope.collaborators[el['login']] == undefined) {
+                            $scope.collaborators[el['login']] = 0;
+                        }
+                        $scope.collaborators[el['login']]++;
+                    });
+                });
 
 
         });
 
+
     };
+
 })
