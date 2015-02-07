@@ -1,6 +1,6 @@
-var app = angular.module("GitMeApp", []_
+var app = angular.module("GitMeApp", [])
 
-app.controller ("MainDataController", "$scope", function ($scope) {
+app.controller ("MainDataController", function ($scope) {
     $scope.name = "Fuck you";
     $scope.repos = [];
     $scope.num_repos = 0;
@@ -22,10 +22,10 @@ app.controller ("MainDataController", "$scope", function ($scope) {
     $scope.collaborators = {};
     $scope.followers = 0;
     $scope.downloads = 0;
-
+    console.dir("hello!")
 
     var new_name = function (name) {
-        $.ajax("api.github.com/user/"+$scope.name"/repos", function (data, e) {
+        $.ajax("api.github.com/user/"+$scope.name+"/repos", function (data, e) {
             if (e) {
                 console.log("Data cannot be received.");
             }
@@ -64,11 +64,10 @@ app.controller ("MainDataController", "$scope", function ($scope) {
                         $scope.collaborators[el['login']]++;
                     });
                 });
+            });
 
 
         });
-
-
     };
 
 })
