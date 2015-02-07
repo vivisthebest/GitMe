@@ -150,6 +150,10 @@ app.controller ("MainDataController", function ($scope) {
         ]
     };
 
+    setTimeout(function () {
+        
+    });
+
     var myBarChart = new Chart(ctx).Bar(data);
     $scope.name = "Fuck you";
     $scope.repos = [];
