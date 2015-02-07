@@ -1,4 +1,4 @@
 GitMe
 ========
 
-A simple analysis of github statistics.
+An amazingly simple analysis of github statistics. Much wow!
