@@ -79,6 +79,7 @@ body {
 
 .languages-doughnut {
     float: right;
+    margin-left: 10vw;
     margin-right: 16vw;
     margin-top: 8vh;
     margin-bottom: 14vh;
@@ -177,6 +178,14 @@ body {
     height: 4em;
 }
 
+.search-text {
+    width: 40vw;
+}
+@media (min-width: 768px)
+.form-inline .form-control {
+    width: 40vw;
+}
+
 .splash {
     z-index: 9999;
     background-image: url('../assets/img/Background.png');
@@ -200,12 +209,18 @@ body {
 }
 
 .week {
-    margin-top: 600px;
+    text-align: center;
+    margin-top: 200px;
 }
 
+#week-dist {
+    margin-top: 400px;
+}
 .week-avg {
-    margin-right: auto;
-    margin-left: auto;
+    margin-right: 22vw;
+    margin-left: 22vw;
+    position: absolute;
+    margin-top: 300px;
     width: 700px;
     text-align: center;
     font-size: 50px;

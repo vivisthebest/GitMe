@@ -51,11 +51,11 @@ app.controller ("MainDataController", function ($scope) {
                     $('.hide-this').hide('slow');
                 }, 4000);
             }, 1001);
-            circle.animate(1, function() {circle.animate(0)});
+            circle.animate(1);
             setTimeout(function () {
                 $('.graphs').show().css('opacity', 0);
                 $('.graphs').animate({opacity: 1, duration: 4000});
-            }, 5200);
+            }, 5700);
             console.log("Searching for "+name+"...");
             new_name(name);
         }, 400);
@@ -299,7 +299,7 @@ app.controller ("MainDataController", function ($scope) {
 
             var ctx = document.getElementById("weekday-dist").getContext("2d");
             var myBarChart = new Chart(ctx).Bar(data, bar_options)
-        }, 8000);
+        }, 8500);
 
     };
     //new_name("echiou");
