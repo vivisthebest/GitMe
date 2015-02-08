@@ -1,4 +1,5 @@
 var app = angular.module("GitMeApp", [])
+var BreakException = {};
 
 Chart.defaults.global = {
     // Boolean - Whether to animate the chart
@@ -165,6 +166,21 @@ app.controller ("MainDataController", function ($scope) {
     var myBarChart = new Chart(ctx).Bar($scope.data);
     $scope.name = "Fuck you";
     $scope.repos = [];
+    $scope.biggest_repos = [
+        {
+            'name': '',
+            'size': -1
+        },
+        {
+            'name': '',
+            'size': -1
+        },
+        {
+            'name': '',
+            'size': -1
+        }
+    ];
+    $scope.counter = 0;
     $scope.num_repos = 0;
     $scope.stars = 0;
     $scope.watchers = 0;
@@ -202,15 +218,30 @@ app.controller ("MainDataController", function ($scope) {
                 $scope.stars += el['stargazers_count'];
                 $scope.watchers += el['watchers_count'];
                 $scope.open_issues += el['open_issues_count'];
+                $scope.counter = 0
                 $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages", function (data, e) {
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
                             $scope.languages[el] = 0;
                         }
                         $scope.languages[el] += data[el];
+                        $scope.counter += data[el];
                     });
 
                 });
+
+                try {
+                    biggest_repos.forEach(function (el, i, arr) {
+                        if($scope.counter > el['size']) {
+                            biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
+                            biggest_repos.pop();
+                            throw BreakException;
+                        }
+                    });
+                } catch (e) {
+                    if (e!=BreakException) throw e;
+                }
+
 
                 $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'stats/punch_card', function(data, e) {
                     data.forEach(function(el, i, arr) {
