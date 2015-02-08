@@ -1,6 +1,26 @@
+$('.graphs').hide();
 var app = angular.module("GitMeApp", []);
 var BreakException = {};
 
+var circle = 0;
+window.onload = function onLoad() {
+    circle = new ProgressBar.Circle('#loader', {
+        color: '#FCB03C',
+        strokeWidth: 3.5,
+        trailWidth: 1.5,
+        duration: 5000,
+        easing: 'easeInOut',
+        text: {
+            value: '0'
+        },
+        step: function(state, bar) {
+            bar.setText((bar.value() * 100).toFixed(0));
+        }
+    });
+    $('#loader').hide();
+    $('.loader').hide();
+
+};
 
 
 app.controller ("MainDataController", function ($scope) {
@@ -8,6 +28,24 @@ app.controller ("MainDataController", function ($scope) {
 
     $scope.search = function () {
         var name = $(".search-text")[0].value;
+        $('.splash').slideUp(1000);
+        $('.logo').animate({opacity: 0});
+        $('.headstuff').animate({opacity:0});
+        $('.big-search').animate({opacity:0});
+        $('.OCTOCAT').animate({opacity:0});
+        setTimeout(function() {
+            $('#loader').show();
+            $('.loader').show();
+            $('.loader').css('opacity', 0);
+            $('.loader').animate({opacity: 1, duration: 500})
+            setTimeout(function () {
+                $('.hide-this').hide('slow');
+            }, 4000);
+        }, 1001);
+        circle.animate(1);
+        setTimeout(function () {
+            $('.graphs').show();
+        }, 5000);
         console.log("Searching for "+name+"...");
         new_name(name);
     };
@@ -187,7 +225,7 @@ app.controller ("MainDataController", function ($scope) {
             console.log($scope.watchers)
             console.log($scope.num_repos)
 
-        }, 5000)
+        }, 1000)
     };
     //new_name("echiou");
 });

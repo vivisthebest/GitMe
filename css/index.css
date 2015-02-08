@@ -1,17 +1,64 @@
+@font-face {
+    font-family: 'Titillium Web';
+    src: url('../assets/fonts/titillium_web/TitilliumWeb-Regular.ttf');
+}
+
+body {
+    font-family: Titillium Web
+}
 .big-search {
-    margin: 40vh 25vw;
+    margin: 44vh 25vw;
     position: absolute;
 }
 
 .btn-search {
     background-color: #f8a543;
+    width: 120px;
+}
+
+.btn-search:focus {
+    background-color: #E29F50;
+    outline: none;
+}
+.btn-search:hover {
+    background-color: #E29F50;
+}
+
+
+.headstuff {
+    font-family: Titillium Web;
+    font-size: 1.8em;
+    color: white;
+    position: absolute;
+    margin: 28vh 29vw;
+}
+
+#loader {
+    width: 20vw;
+    font-size: 4em;
+    position: absolute;
+    top: 20vh;
+    margin-left: 40vw;
+}
+
+.loader {
+    font-size: 2.5em;
+    margin-top: 28vh;
+    margin-left: 38vw;
 }
 
 .logo {
     position: absolute;
-    width: 20vw;
-    margin: 20vh 39vw;
+    text-shadow: 1px 1px #000000;
+    font-size: 6em;
+    color: white;
+    margin: 10vh 41vw;
     text-align: center;
+}
+
+.OCTOCAT {
+    position: absolute;
+    margin: 60vh 0 0 40vw;
 }
 
 .searchbar {
@@ -19,6 +66,12 @@
 }
 
 .splash {
+    z-index: 9999;
+    background-image: url('../img/Background.png');
+    background-size: 100% 82%;
+    background-repeat: no-repeat;
+    position: absolute;
     height: 100%;
     width: 100%;
+
 }

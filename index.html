@@ -8,27 +8,39 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="bower_components/Chart.js/Chart.js"></script>
-    <scropt src="js/Chart-Options.js"></script>
+    <script src="bower_components/progressbar.js/dist/progressbar.min.js"></script>
+    <script src="js/Chart-Options.js"></script>
     <script src="js/index.js"></script>
     <link rel="stylesheet" href="css/index.css" />
 </head>
 <body ng-controller="MainDataController">
 <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
 
+<div class='hide-this'>
+<div id='loader'></div>
+<div class='loader'>Loading GitHub Data...</div>
+</div>
+
 <div class="container splash">
 
-<img class='logo' src="img/GitHub-Logo.png"></img>
-<div class="input-group col-md-6 big-search">
+<!--<img class='logo' src="img/GitHub-Logo.png"></img>-->
+<span class="logo" >GitMe</span>
+<span class="headstuff">An amazingly simple analysis of github statistics</span>
 
+<div class="input-group col-md-6 big-search">
     <input type="text" class="form-control searchbar search-text">
     <span class="input-group-btn searchbar">
         <button class="btn btn-success btn-search searchbar" type="button" ng-click="search()">
             Go
         </button>
     </span>
+</div>
+
+<img src="img/Octocat.png" class="OCTOCAT"></img>
 
 </div>
-</div>
+
+
 
 </body>
 </html>
