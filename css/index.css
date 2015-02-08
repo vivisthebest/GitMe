@@ -20,7 +20,7 @@ body {
     font-size: 2em;
     margin-left: 140px;
     margin-top: 50px;
-    width: 30vw;
+    width: 35vw;
     border: 2px solid lightgray;
     padding: 1em 1em;
 }
@@ -140,6 +140,21 @@ body {
 .commits {
     margin-left: 10vw;
     margin-right: 10vw;
+}
+
+.num-repos {
+    font-size: 35px;
+    color: black;
+}
+
+.num-commits {
+    font-size: 35px;
+    color: black;
+}
+
+.num-lines {
+    font-size: 35px;
+    color: black;
 }
 
 .OCTOCAT {
