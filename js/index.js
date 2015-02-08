@@ -186,6 +186,7 @@ app.controller ("MainDataController", function ($scope) {
                     if (e!=BreakException) throw e;
                 }
 
+
                 var ctx = document.getElementById("languages-doughnut").getContext("2d");
 
                 var colors = [
@@ -201,14 +202,21 @@ app.controller ("MainDataController", function ($scope) {
                     ["#878181", "#999292"]
                 ];
                 var data = [];
-                Object.keys($scope.languages).forEach(function (lang, i, arr) {
-                    data.push({
-                        value: $scope.languages[lang],
-                        color: colors[i][0],
-                        highlight: colors[i][1],
-                        label: lang
+                try {
+                    Object.keys($scope.languages).forEach(function (lang, i, arr) {
+                        if (i == 10) {
+                            throw BreakException
+                        }
+                        data.push({
+                            value: $scope.languages[lang],
+                            color: colors[i][0],
+                            highlight: colors[i][1],
+                            label: lang
+                        });
                     });
-                });
+                } catch (e) {
+                    if (e != BreakException) throw e;
+                }
 
                 var myDoughnut = new Chart(ctx).Doughnut(data)
 
@@ -235,6 +243,7 @@ app.controller ("MainDataController", function ($scope) {
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     if (!(data.forEach)) {
                         console.dir(data);
+                        return;
                     }
                     data.forEach(function(el, i, arr) {
                         if(el.author.login.toLowerCase() == $scope.name) {
@@ -269,15 +278,24 @@ app.controller ("MainDataController", function ($scope) {
 
         });
         setTimeout(function () {
-            console.log($scope.commits)
-            console.log($scope.biggest_repos)
-            console.log($scope.languages)
-            console.log($scope.peers)
-            console.log($scope.stars)
-            console.log($scope.watchers)
-            console.log($scope.num_repos)
+            var data = {
+                labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                datasets: [
+                    {
+                        label: "Days of the week",
+                        fillColor: "rgba(220,220,220,0.5)",
+                        strokeColor: "rgba(220,220,220,0.8)",
+                        highlightFill: "rgba(220,220,220,0.75)",
+                        highlightStroke: "rgba(220,220,220,1)",
+                        data: $scope.weekday_avgs
+                    },
+                ]
+            };
 
-        }, 1000)
+            var ctx = document.getElementById("weekday-dist").getContext("2d");
+            var myBarChart = new Chart(ctx).Bar(data, bar_options)
+        }, 8000);
+
     };
     //new_name("echiou");
 });
@@ -309,5 +327,41 @@ var doughnut_options = {
 
     //String - A legend template
     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+
+}
+
+var bar_options = {
+    //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+    scaleBeginAtZero : true,
+
+    //Boolean - Whether grid lines are shown across the chart
+    scaleShowGridLines : true,
+
+    //String - Colour of the grid lines
+    scaleGridLineColor : "rgba(0,0,0,.05)",
+
+    //Number - Width of the grid lines
+    scaleGridLineWidth : 1,
+
+    //Boolean - Whether to show horizontal lines (except X axis)
+    scaleShowHorizontalLines: true,
+
+    //Boolean - Whether to show vertical lines (except Y axis)
+    scaleShowVerticalLines: true,
+
+    //Boolean - If there is a stroke on each bar
+    barShowStroke : true,
+
+    //Number - Pixel width of the bar stroke
+    barStrokeWidth : 4,
+
+    //Number - Spacing between each of the X value sets
+    barValueSpacing : 5,
+
+    //Number - Spacing between data sets within X values
+    barDatasetSpacing : 3,
+
+    //String - A legend template
+    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
 
 }
