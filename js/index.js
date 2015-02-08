@@ -22,6 +22,7 @@ app.controller ("MainDataController", "$scope", function ($scope) {
     $scope.collaborators = {};
     $scope.followers = 0;
     $scope.downloads = 0;
+    $scope.lines = 0;
 
 
     var new_name = function (name) {
@@ -62,6 +63,13 @@ app.controller ("MainDataController", "$scope", function ($scope) {
                             $scope.collaborators[el['login']] = 0;
                         }
                         $scope.collaborators[el['login']]++;
+                    });
+                });
+
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'/stats/contributors', function(data, e) {
+                    data.forEach(function(el, i, arr) {
+                        $scope.lines += el['weeks']['a'];
+                        $scope.lines -= el['weeks']['d'];
                     });
                 });
 
