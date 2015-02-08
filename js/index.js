@@ -222,8 +222,10 @@ app.controller ("MainDataController", function ($scope) {
 
                 $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'/stats/contributors', function(data, e) {
                     data.forEach(function(el, i, arr) {
-                        $scope.lines += el['weeks']['a'];
-                        $scope.lines -= el['weeks']['d'];
+                        if($scope.name == el['author']['login']) {
+                            $scope.lines += el['weeks']['a'];
+                            $scope.lines -= el['weeks']['d'];
+                        }
                     });
                 });
 
