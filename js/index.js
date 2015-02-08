@@ -284,7 +284,7 @@ app.controller ("MainDataController", function ($scope) {
                     $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
                 }
                 $('.num-lines').text(numberWithCommas($scope.lines));
-            }, 2000);
+            }, 2500);
 
 
         });
