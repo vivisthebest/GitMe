@@ -143,7 +143,7 @@ app.controller ("MainDataController", function ($scope) {
         $.ajax("https://api.github.com/users/"+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
             $scope.full_name = data.name;
             $scope.profile_url = data.avatar_url;
-            setTimeout(function() {
+            setInterval(function() {
                 $('.full-name').text($scope.full_name);
                 $('.prof').attr('src', $scope.profile_url);
             }, 5200);
@@ -270,7 +270,7 @@ app.controller ("MainDataController", function ($scope) {
                     });
                 });
             });
-            setTimeout(function() {
+            setInterval(function() {
                 if($scope.biggest_repos[0].size >= 0) {
                     $('.ind-repo-0').text($scope.biggest_repos[0].name);
                     $('.ind-repo-0-bits').text(numberWithCommas($scope.biggest_repos[0].size));
@@ -284,7 +284,7 @@ app.controller ("MainDataController", function ($scope) {
                     $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
                 }
                 $('.num-lines').text(numberWithCommas($scope.lines));
-            }, 2500);
+            }, 3000);
 
 
         });
