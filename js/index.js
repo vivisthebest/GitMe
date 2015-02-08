@@ -197,13 +197,15 @@ app.controller ("MainDataController", function ($scope) {
     $scope.downloads = 0;
     $scope.lines = 0;
 
+    var client_id = "4cb3db40db885450d09f",
+        client_secret = "f143655f867cb8ae4036101c32c1bef807c7f3bb";
 
     var new_name = function (name) {
-        $scope.name = name;
-        $.ajax("https://api.github.com/users/"+$scope.name+"/repos").done(function (data) {
+        $scope.name = name.toLowerCase();
+        $.ajax("https://api.github.com/users/"+$scope.name+"/repos?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
             $scope.repos = data;
 
-            $.ajax('https://api.github.com/users/'+$scope.name).done(function (data) {
+            $.ajax('https://api.github.com/users/'+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
                 $scope.num_repos = data['public_repos'];
             });
 
@@ -212,7 +214,10 @@ app.controller ("MainDataController", function ($scope) {
                 $scope.watchers += repo['watchers_count'];
                 $scope.open_issues += repo['open_issues_count'];
                 $scope.counter = 0
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages").done(function (data) {
+                $.ajax({
+                    url: 'https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages"+"?client_id="+client_id+"&client_secret="+client_secret,
+                    async: false
+                }).done(function (data) {
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
                             $scope.languages[el] = 0;
@@ -236,31 +241,35 @@ app.controller ("MainDataController", function ($scope) {
                 }
 
 
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/punch_card').done(function(data) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/punch_card'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
                         $scope.weekday_avgs[el[0]] += (el[2] / $scope.num_repos);
                     });
                 });
 
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/commits').done(function(data) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/commits'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
-                        if (el['author']['login'] == $scope.name) {
-                            $scope.commit++;
-                        }
+                        if (el.author != null){
+                            if (el['author']['login'].toLowerCase() == $scope.name) {
+                                $scope.commits++;
+                            }
 
-                        if($scope.name == el['author']['login']) {
-                            $scope.lines += el['weeks']['a'];
-                            $scope.lines -= el['weeks']['d'];
+/*c
+                            if($scope.name == el['author']['login']) {
+                                $scope.lines += el['weeks']['a'];
+                                $scope.lines -= el['weeks']['d'];
+
+                            }*/
                         }
                     });
                 });
 
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/pu/contributors').done(function(data) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
                         if(el.author == $scope.name) {
                             el.weeks.forEach(function (week, j, week_arr) {
                                 $scope.lines += week.a;
-                                $scope.lines -= weel.d;
+                                $scope.lines -= week.d;
                             });
                         }
                     });
@@ -270,6 +279,15 @@ app.controller ("MainDataController", function ($scope) {
 
         });
     };
-    new_name("kylelh");
+    new_name("abreen");
+    setTimeout(function () {
+        console.log($scope.commits)
+        console.log($scope.biggest_repos)
+        console.log($scope.languages)
+        console.log($scope.peers)
+        console.log($scope.stars)
+        console.log($scope.watchers)
+        console.log($scope.num_repos)
 
-})
+    }, 5000)
+});
