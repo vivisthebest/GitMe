@@ -264,13 +264,23 @@ app.controller ("MainDataController", function ($scope) {
                     });
                 });
 
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
-                        if(el.author == $scope.name) {
+                        if(el.author.login.toLowerCase() == $scope.name) {
                             el.weeks.forEach(function (week, j, week_arr) {
                                 $scope.lines += week.a;
                                 $scope.lines -= week.d;
                             });
+                        } else {
+                            if (el.author != null) {
+                                if (!(el.author.login in $scope.peers)) {
+                                    $scope.peers[el.author.login] = 0;
+                                    el.weeks.forEach(function (week, j, week_arr) {
+                                        $scope.peers[el.author.login] += week.a;
+                                        $scope.peers[el.author.login] -= week.d;
+                                    });
+                                }
+                            }
                         }
                     });
                 });
