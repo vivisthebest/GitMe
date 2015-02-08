@@ -232,8 +232,6 @@ app.controller ("MainDataController", function ($scope) {
                         if (el['author']['login'] == $scope.name) {
                             $scope.commit++;
                         }
-                        if (repo_num % 5 == 0) {
-                            $scope.total_commits.push($scope.commit);
 
                         if($scope.name == el['author']['login']) {
                             $scope.lines += el['weeks']['a'];
