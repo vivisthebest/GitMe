@@ -11,24 +11,18 @@ body {
     position: absolute;
 }
 
+.big-title {
+    margin-bottom: 1.2em;
+}
+
 .biggest-repos {
     float: left;
     font-size: 2em;
-    height: 30vh;
-    margin-left: 30px;
-    width: 40vw;
-}
-
-
-
-.ind-repo-0-bits {
-    float: right;
-}
-.ind-repo-1-bits {
-    float: right;
-}
-.ind-repo-2-bits {
-    float: right;
+    margin-left: 140px;
+    margin-top: 50px;
+    width: 30vw;
+    border: 2px solid lightgray;
+    padding: 1em 1em;
 }
 
 .btn-search {
@@ -42,6 +36,12 @@ body {
 }
 .btn-search:hover {
     background-color: #E29F50;
+}
+
+.doughnut-head {
+    text-align: center;
+    font-size: 2.2em;
+    margin-bottom: 1em;
 }
 
 .full-name {
@@ -65,9 +65,23 @@ body {
     margin: 28vh 29vw;
 }
 
-#languages-doughnut {
+.ind-repo-0-bits {
     float: right;
-    margin: 17vh 13vw;
+}
+
+.ind-repo-1-bits {
+    float: right;
+}
+
+.ind-repo-2-bits {
+    float: right;
+}
+
+.languages-doughnut {
+    float: right;
+    margin-right: 16vw;
+    margin-top: 8vh;
+    margin-bottom: 14vh;
 }
 
 #loader {
@@ -95,12 +109,15 @@ body {
 
 .repo-0 {
     padding-left: 15px;
+    margin-bottom: 1em;
 }
 .repo-1 {
     padding-left: 15px;
+    margin-bottom: 1em;
 }
 .repo-2 {
     padding-left: 15px;
+    margin-bottom: 1em;
 }
 
 .repos, .commits, .lines {

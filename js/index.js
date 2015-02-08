@@ -284,7 +284,7 @@ app.controller ("MainDataController", function ($scope) {
 
 var doughnut_options = {
     //Boolean - Whether we should show a stroke on each segment
-    segmentShowStroke : true,
+    segmentShowStroke : false,
 
     //String - The colour of each segment stroke
     segmentStrokeColor : "#fff",
