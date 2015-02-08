@@ -271,12 +271,18 @@ app.controller ("MainDataController", function ($scope) {
                 });
             });
             setTimeout(function() {
-                $('.ind-repo-0').text($scope.biggest_repos[0].name);
-                $('.ind-repo-0-bits').text(numberWithCommas($scope.biggest_repos[0].size));
-                $('.ind-repo-1').text($scope.biggest_repos[1].name);
-                $('.ind-repo-1-bits').text(numberWithCommas($scope.biggest_repos[1].size));
-                $('.ind-repo-2').text($scope.biggest_repos[2].name);
-                $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
+                if($scope.biggest_repos[0].size >= 0) {
+                    $('.ind-repo-0').text($scope.biggest_repos[0].name);
+                    $('.ind-repo-0-bits').text(numberWithCommas($scope.biggest_repos[0].size));
+                }
+                if($scope.biggest_repos[1].size >= 0) {
+                    $('.ind-repo-1').text($scope.biggest_repos[1].name);
+                    $('.ind-repo-1-bits').text(numberWithCommas($scope.biggest_repos[1].size));
+                }
+                if ($scope.biggest_repos[2].size >= 0) {
+                    $('.ind-repo-2').text($scope.biggest_repos[2].name);
+                    $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
+                }
                 $('.num-lines').text(numberWithCommas($scope.lines));
             }, 2000);
 
