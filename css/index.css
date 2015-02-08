@@ -198,3 +198,17 @@ body {
     position: relative;
     text-align: center;
 }
+
+.week {
+    margin-top: 600px;
+}
+
+.week-avg {
+    margin-right: auto;
+    margin-left: auto;
+    width: 700px;
+    text-align: center;
+    font-size: 50px;
+    font-weight: strong;
+
+}

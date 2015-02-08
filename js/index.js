@@ -288,8 +288,8 @@ app.controller ("MainDataController", function ($scope) {
                 datasets: [
                     {
                         label: "Days of the week",
-                        fillColor: "rgba(220,220,220,0.5)",
-                        strokeColor: "rgba(220,220,220,0.8)",
+                        fillColor: "#4EBAEE",
+                        strokeColor: "#4EBAEE",
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
                         data: $scope.weekday_avgs
@@ -352,7 +352,7 @@ var bar_options = {
     scaleShowHorizontalLines: true,
 
     //Boolean - Whether to show vertical lines (except Y axis)
-    scaleShowVerticalLines: true,
+    scaleShowVerticalLines: false,
 
     //Boolean - If there is a stroke on each bar
     barShowStroke : true,
