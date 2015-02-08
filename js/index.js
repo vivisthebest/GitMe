@@ -31,7 +31,7 @@ Chart.defaults.global = {
     scaleLineWidth: 1,
 
     // Boolean - Whether to show labels on the scale
-    scaleShowLabels: true,
+    scaleShowLabels: false,
 
     // Interpolated JS string - can access value
     scaleLabel: "<%=value%>",
@@ -128,7 +128,7 @@ app.controller ("MainDataController", function ($scope) {
 
     var ctx = document.getElementById("myChart").getContext("2d");
 
-    var data = {
+    $scope.data = {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
         datasets: [
             {
@@ -151,10 +151,18 @@ app.controller ("MainDataController", function ($scope) {
     };
 
     setTimeout(function () {
+      //$scope.data.datasets[0].data[0] += 100;
+      //console.dir($scope.data);
+      //console.dir(myBarChart.initialize($scope.data));
+      //myBarChart.addData([100, 12], "January")
+      myBarChart.datasets[0].bars[0].value -= 20;
+      myBarChart.update();
 
-    });
 
-    var myBarChart = new Chart(ctx).Bar(data);
+    }, 2000);
+
+
+    var myBarChart = new Chart(ctx).Bar($scope.data);
     $scope.name = "Fuck you";
     $scope.repos = [];
     $scope.num_repos = 0;
@@ -190,11 +198,11 @@ app.controller ("MainDataController", function ($scope) {
                 $scope.num_repos = data['public_repos'];
             });
 
-            $scope.repos.forEach(function (el, i, arr) {
+            $scope.repos.forEach(function (repo, repo_num, arr) {
                 $scope.stars += el['stargazers_count'];
                 $scope.watchers += el['watchers_count'];
                 $scope.open_issues += el['open_issues_count'];
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+"/languages", function (data, e) {
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages", function (data, e) {
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
                             $scope.languages[el] = 0;
@@ -204,13 +212,13 @@ app.controller ("MainDataController", function ($scope) {
 
                 });
 
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'stats/punch_card', function(data, e) {
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'stats/punch_card', function(data, e) {
                     data.forEach(function(el, i, arr) {
                         $scope.weekday_avgs[el[0]] += (el[2] / $scope.num_repos);
                     });
                 });
 
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'/collaborators', function(data, e) {
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/collaborators', function(data, e) {
                     data.forEach(function(el, i, arr) {
                         if($scope.collaborators[el['login']] == undefined) {
                             $scope.collaborators[el['login']] = 0;
@@ -218,14 +226,25 @@ app.controller ("MainDataController", function ($scope) {
                         $scope.collaborators[el['login']]++;
                     });
                 });
-            });
 
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+el['name']+'/stats/contributors', function(data, e) {
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/commits', function(data, e) {
                     data.forEach(function(el, i, arr) {
-                        $scope.lines += el['weeks']['a'];
-                        $scope.lines -= el['weeks']['d'];
+                        if (el['author']['login'] == $scope.name) {
+                            $scope.commit++;
+                        }
+                        if (repo_num % 5 == 0) {
+                            $scope.total_commits.push($scope.commit);
+                        }
                     });
                 });
+            });
+
+            $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors', function(data, e) {
+                data.forEach(function(el, i, arr) {
+                    $scope.lines += el['weeks']['a'];
+                    $scope.lines -= el['weeks']['d'];
+                });
+            });
 
 
         });
