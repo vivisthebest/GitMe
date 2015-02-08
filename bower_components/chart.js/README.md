@@ -1,68 +1,20 @@
-chart.js
-========
+# Chart.js 
 
-# Getting Started
-The chart.js library is a graph library that enables you to create svg donut charts on your webpage with just a couple of lines of code. 
+[![Build Status](https://travis-ci.org/nnnick/Chart.js.svg?branch=master)](https://travis-ci.org/nnnick/Chart.js) [![Code Climate](https://codeclimate.com/github/nnnick/Chart.js/badges/gpa.svg)](https://codeclimate.com/github/nnnick/Chart.js)
 
-## Installation
-The chart.js is a Bower package (which is in turn a [Node.js](http://nodejs.org/) package - you'll need that first), so you just need to install Bower -
 
-    npm install bower -g
+*Simple HTML5 Charts using the canvas element* [chartjs.org](http://www.chartjs.org)
 
-Having done that, your next step is
+## Documentation
 
-    bower install git@github.com:centralway/chart.js.git
+You can find documentation at [chartjs.org/docs](http://www.chartjs.org/docs/). The markdown files that build the site are available under `/docs`. Please note - in some of the json examples of configuration you might notice some liquid tags - this is just for the generating the site html, please disregard.
 
-Next, reference the Chart.js source file
+## Bugs, issues and contributing
 
-    <script type="text/javascript" src="../dist/chart.js"></script>
+Before submitting an issue or a pull request to the project, please take a moment to look over the [contributing guidelines](https://github.com/nnnick/Chart.js/blob/master/CONTRIBUTING.md) first.
 
-## Usage
-Create a div in your html page with an id of your taste, on this particular case "donutChart". 
-Paste the next snippet of javascript code:
+For support using Chart.js, please post questions with the [`chartjs` tag on Stack Overflow](http://stackoverflow.com/questions/tagged/chartjs).
 
-```javascript
-//creates the graph but doesn't displays it
-var donut = new Donut({
-    innerRadius : 120,
-    outerRadius : 180,
-    canvasSize : {
-        width : 500,
-        height : 500 },
-    percentages : [75, 25],
-    sectorClasses : ['negative', 'neutral'],
-    mainText : 'Main',
-    secondaryText : 'Secondary',
+## License
 
-    //not mandatory, default values assigned
-    enableInteraction : true,
-    htmlReceptorID : 'donutChart',
-    mainTextClass : 'donutMainText',
-    secondaryTextClass : 'donutSecondaryText',
-    hasBlankSectors : true,
-    id : 'ID1'
-});
-
-//display the graph
-donut.create();
-```
-
-And voilà! You have your graph. You can style the graph with css, using the classes you defined upon creation ("mainTextClass", "seocndaryTextClass", "sectorClasses")
-
-## Dependencies
-The library depends on [raphaeljs](http://raphaeljs.com/) library which is "a small JavaScript library that should simplify your work with vector graphics on the web." 
-
-#### Example
-The repository contains a very simple example on how to use the library, is just a simple html page with a script that creates a donut graph.
-
-### Unit tests
-Incoming!
-
-# Credits
-Copyright (c) 2013 by Centralway Factory AG.
-
-# Licensing Options
-The Chart.js is licensed under free commercial and open source licenses for
-application development, and a paid commercial license for OEM uses.
-
-See LICENSE.txt for license.
+Chart.js is available under the [MIT license](http://opensource.org/licenses/MIT).
