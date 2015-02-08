@@ -2,6 +2,10 @@ $('.graphs').hide();
 var app = angular.module("GitMeApp", []);
 var BreakException = {};
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 var circle = 0;
 window.onload = function onLoad() {
     circle = new ProgressBar.Circle('#loader', {
@@ -26,33 +30,39 @@ window.onload = function onLoad() {
 app.controller ("MainDataController", function ($scope) {
 
 
+    $scope.name_refresh = function () {
+        $scope.apply();
+        return $scope.full_name;
+    }
     $scope.search = function () {
-        var name = $(".search-text")[0].value;
-        $('.splash').slideUp(1000);
-        $('.logo').animate({opacity: 0});
-        $('.headstuff').animate({opacity:0});
-        $('.big-search').animate({opacity:0});
-        $('.OCTOCAT').animate({opacity:0});
         setTimeout(function() {
-            $('#loader').show();
-            $('.loader').show();
-            $('.loader').css('opacity', 0);
-            $('.loader').animate({opacity: 1, duration: 500})
+            var name = $(".search-text")[0].value;
+            $('.splash').slideUp(1000);
+            $('.logo').animate({opacity: 0});
+            $('.headstuff').animate({opacity:0});
+            $('.big-search').animate({opacity:0});
+            $('.OCTOCAT').animate({opacity:0});
+            setTimeout(function() {
+                $('#loader').show();
+                $('.loader').show();
+                $('.loader').css('opacity', 0);
+                $('.loader').animate({opacity: 1, duration: 500})
+                setTimeout(function () {
+                    $('.hide-this').hide('slow');
+                }, 4000);
+            }, 1001);
+            circle.animate(1);
             setTimeout(function () {
-                $('.hide-this').hide('slow');
-            }, 4000);
-        }, 1001);
-        circle.animate(1);
-        setTimeout(function () {
-            $('.graphs').show();
-        }, 5000);
-        console.log("Searching for "+name+"...");
-        new_name(name);
+                $('.graphs').show().css('opacity', 0);
+                $('.graphs').animate({opacity: 1, duration: 4000});
+            }, 5200);
+            console.log("Searching for "+name+"...");
+            new_name(name);
+        }, 400);
     };
 
-    /*
-    var ctx = document.getElementById("myChart").getContext("2d");
 
+    /*
     $scope.data = {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
         datasets: [
@@ -83,6 +93,7 @@ app.controller ("MainDataController", function ($scope) {
 
     var myBarChart = new Chart(ctx).Bar($scope.data);
     */
+
     $scope.name = "";
     $scope.repos = [];
     $scope.biggest_repos = [
@@ -121,18 +132,28 @@ app.controller ("MainDataController", function ($scope) {
     $scope.followers = 0;
     $scope.downloads = 0;
     $scope.lines = 0;
+    $scope.full_name = '';
+    $scope.profile_url = '';
 
     var client_id = "4cb3db40db885450d09f",
         client_secret = "f143655f867cb8ae4036101c32c1bef807c7f3bb";
 
     var new_name = function (name) {
         $scope.name = name.toLowerCase();
+        $.ajax("https://api.github.com/users/"+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
+            $scope.full_name = data.name;
+            $scope.profile_url = data.avatar_url;
+            setTimeout(function() {
+                $('.full-name').text($scope.full_name);
+                $('.prof').attr('src', $scope.profile_url);
+            }, 5200);
+        });
+        $.ajax('https://api.github.com/users/'+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
+            $scope.num_repos = data['public_repos'];
+            $('.num-repos').text(numberWithCommas($scope.num_repos));
+        });
         $.ajax("https://api.github.com/users/"+$scope.name+"/repos?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
             $scope.repos = data;
-
-            $.ajax('https://api.github.com/users/'+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
-                $scope.num_repos = data['public_repos'];
-            });
 
             $scope.repos.forEach(function (repo, repo_num, arr) {
                 $scope.stars += repo['stargazers_count'];
@@ -141,7 +162,7 @@ app.controller ("MainDataController", function ($scope) {
                 $scope.counter = 0
                 $.ajax({
                     url: 'https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages"+"?client_id="+client_id+"&client_secret="+client_secret,
-                    async: true
+                    async: false
                 }).done(function (data) {
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
@@ -165,10 +186,38 @@ app.controller ("MainDataController", function ($scope) {
                     if (e!=BreakException) throw e;
                 }
 
+                var ctx = document.getElementById("languages-doughnut").getContext("2d");
+
+                var colors = [
+                    ["#AF2D8D", "#D81AA5"],
+                    ["#86A4BA", "#6D9ABA"],
+                    ["#C4A6B8", "#C48DAD"],
+                    ["#1D2304", "#2B2A25"],
+                    ["#F5F7ED", "#E7F7B2"],
+                    ["#144F27", "#1E7539"],
+                    ["#6D5157", "#6D434D"],
+                    ["#616858", "#686868"],
+                    ["#D6CEB6", "#D6D5D1"],
+                    ["#878181", "#999292"]
+                ];
+                var data = [];
+                Object.keys($scope.languages).forEach(function (lang, i, arr) {
+                    data.push({
+                        value: $scope.languages[lang],
+                        color: colors[i][0],
+                        highlight: colors[i][1],
+                        label: lang
+                    });
+                });
+
+                var myDoughnut = new Chart(ctx).Doughnut(data)
+
+
+
 
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/punch_card'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
-                        $scope.weekday_avgs[el[0]] += (el[2] / $scope.num_repos);
+                        $scope.weekday_avgs[el[0]] += el[2];
                     });
                 });
 
@@ -178,15 +227,9 @@ app.controller ("MainDataController", function ($scope) {
                             if (el['author']['login'].toLowerCase() == $scope.name) {
                                 $scope.commits++;
                             }
-
-/*c
-                            if($scope.name == el['author']['login']) {
-                                $scope.lines += el['weeks']['a'];
-                                $scope.lines -= el['weeks']['d'];
-
-                            }*/
                         }
                     });
+                    $('.num-commits').text(numberWithCommas($scope.commits));
                 });
 
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
@@ -213,6 +256,15 @@ app.controller ("MainDataController", function ($scope) {
                     });
                 });
             });
+            setTimeout(function() {
+                $('.ind-repo-0').text($scope.biggest_repos[0].name);
+                $('.ind-repo-0-bits').text(numberWithCommas($scope.biggest_repos[0].size));
+                $('.ind-repo-1').text($scope.biggest_repos[1].name);
+                $('.ind-repo-1-bits').text(numberWithCommas($scope.biggest_repos[1].size));
+                $('.ind-repo-2').text($scope.biggest_repos[2].name);
+                $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
+                $('.num-lines').text(numberWithCommas($scope.lines));
+            }, 2000);
 
 
         });
@@ -229,3 +281,33 @@ app.controller ("MainDataController", function ($scope) {
     };
     //new_name("echiou");
 });
+
+var doughnut_options = {
+    //Boolean - Whether we should show a stroke on each segment
+    segmentShowStroke : true,
+
+    //String - The colour of each segment stroke
+    segmentStrokeColor : "#fff",
+
+    //Number - The width of each segment stroke
+    segmentStrokeWidth : 2,
+
+    //Number - The percentage of the chart that we cut out of the middle
+    percentageInnerCutout : 50, // This is 0 for Pie charts
+
+    //Number - Amount of animation steps
+    animationSteps : 100,
+
+    //String - Animation easing effect
+    animationEasing : "easeOutBounce",
+
+    //Boolean - Whether we animate the rotation of the Doughnut
+    animateRotate : false,
+
+    //Boolean - Whether we animate scaling the Doughnut from the centre
+    animateScale : false,
+
+    //String - A legend template
+    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+
+}
