@@ -289,7 +289,7 @@ app.controller ("MainDataController", function ($scope) {
 
         });
     };
-    new_name("abreen");
+    new_name("echiou");
     setTimeout(function () {
         console.log($scope.commits)
         console.log($scope.biggest_repos)
