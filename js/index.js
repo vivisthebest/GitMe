@@ -152,19 +152,13 @@ app.controller ("MainDataController", function ($scope) {
     };
 
     setTimeout(function () {
-      //$scope.data.datasets[0].data[0] += 100;
-      //console.dir($scope.data);
-      //console.dir(myBarChart.initialize($scope.data));
-      //myBarChart.addData([100, 12], "January")
       myBarChart.datasets[0].bars[0].value -= 20;
       myBarChart.update();
-
-
     }, 2000);
 
 
     var myBarChart = new Chart(ctx).Bar($scope.data);
-    $scope.name = "Fuck you";
+    $scope.name = "";
     $scope.repos = [];
     $scope.biggest_repos = [
         {
@@ -187,6 +181,7 @@ app.controller ("MainDataController", function ($scope) {
     $scope.languages = {};
     $scope.commits = 0;
     $scope.open_issues = 0;
+
     // sunday - saturday (0 - 6)
     $scope.weekday_avgs = {
         0: 0,
@@ -197,29 +192,27 @@ app.controller ("MainDataController", function ($scope) {
         5: 0,
         6: 0
     };
-    $scope.collaborators = {};
+    $scope.peers = {};
     $scope.followers = 0;
     $scope.downloads = 0;
     $scope.lines = 0;
 
-    var new_name = function (name) {
-        $.ajax("api.github.com/user/"+$scope.name+"/repos", function (data, e) {
-            if (e) {
-                console.log("Data cannot be received.");
-            }
 
+    var new_name = function (name) {
+        $scope.name = name;
+        $.ajax("https://api.github.com/users/"+$scope.name+"/repos").done(function (data) {
             $scope.repos = data;
 
-            $.ajax('api.github.com/users/'+$scope.name, function (data, e) {
+            $.ajax('https://api.github.com/users/'+$scope.name).done(function (data) {
                 $scope.num_repos = data['public_repos'];
             });
 
             $scope.repos.forEach(function (repo, repo_num, arr) {
-                $scope.stars += el['stargazers_count'];
-                $scope.watchers += el['watchers_count'];
-                $scope.open_issues += el['open_issues_count'];
+                $scope.stars += repo['stargazers_count'];
+                $scope.watchers += repo['watchers_count'];
+                $scope.open_issues += repo['open_issues_count'];
                 $scope.counter = 0
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages", function (data, e) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages").done(function (data) {
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
                             $scope.languages[el] = 0;
@@ -231,10 +224,10 @@ app.controller ("MainDataController", function ($scope) {
                 });
 
                 try {
-                    biggest_repos.forEach(function (el, i, arr) {
+                    $scope.biggest_repos.forEach(function (el, i, arr) {
                         if($scope.counter > el['size']) {
-                            biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
-                            biggest_repos.pop();
+                            $scope.biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
+                            $scope.biggest_repos.pop();
                             throw BreakException;
                         }
                     });
@@ -243,22 +236,13 @@ app.controller ("MainDataController", function ($scope) {
                 }
 
 
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'stats/punch_card', function(data, e) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'stats/punch_card').done(function(data) {
                     data.forEach(function(el, i, arr) {
                         $scope.weekday_avgs[el[0]] += (el[2] / $scope.num_repos);
                     });
                 });
 
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/collaborators', function(data, e) {
-                    data.forEach(function(el, i, arr) {
-                        if($scope.collaborators[el['login']] == undefined) {
-                            $scope.collaborators[el['login']] = 0;
-                        }
-                        $scope.collaborators[el['login']]++;
-                    });
-                });
-
-                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/commits', function(data, e) {
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/commits').done(function(data) {
                     data.forEach(function(el, i, arr) {
                         if (el['author']['login'] == $scope.name) {
                             $scope.commit++;
@@ -270,17 +254,22 @@ app.controller ("MainDataController", function ($scope) {
                         }
                     });
                 });
-            });
 
-            $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors', function(data, e) {
-                data.forEach(function(el, i, arr) {
-                    $scope.lines += el['weeks']['a'];
-                    $scope.lines -= el['weeks']['d'];
+                $.ajax('api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors').done(function(data) {
+                    data.forEach(function(el, i, arr) {
+                        if(el.author == $scope.name) {
+                            el.weeks.forEach(function (week, j, week_arr) {
+                                $scope.lines += week.a;
+                                $scope.lines -= weel.d;
+                            }
+                        }
+                    });
                 });
             });
 
 
         });
     };
+    new_name("kylelh");
 
 })
