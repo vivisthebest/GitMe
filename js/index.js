@@ -1,132 +1,18 @@
-var app = angular.module("GitMeApp", [])
+var app = angular.module("GitMeApp", []);
 var BreakException = {};
 
-Chart.defaults.global = {
-    // Boolean - Whether to animate the chart
-    animation: true,
 
-    // Number - Number of animation steps
-    animationSteps: 60,
-
-    // String - Animation easing effect
-    animationEasing: "easeOutQuart",
-
-    // Boolean - If we should show the scale at all
-    showScale: true,
-
-    // Boolean - If we want to override with a hard coded scale
-    scaleOverride: false,
-
-    // ** Required if scaleOverride is true **
-    // Number - The number of steps in a hard coded scale
-    scaleSteps: null,
-    // Number - The value jump in the hard coded scale
-    scaleStepWidth: null,
-    // Number - The scale starting value
-    scaleStartValue: null,
-
-    // String - Colour of the scale line
-    scaleLineColor: "rgba(0,0,0,.1)",
-
-    // Number - Pixel width of the scale line
-    scaleLineWidth: 1,
-
-    // Boolean - Whether to show labels on the scale
-    scaleShowLabels: false,
-
-    // Interpolated JS string - can access value
-    scaleLabel: "<%=value%>",
-
-    // Boolean - Whether the scale should stick to integers, not floats even if drawing space is there
-    scaleIntegersOnly: true,
-
-    // Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-    scaleBeginAtZero: false,
-
-    // String - Scale label font declaration for the scale label
-    scaleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-
-    // Number - Scale label font size in pixels
-    scaleFontSize: 12,
-
-    // String - Scale label font weight style
-    scaleFontStyle: "normal",
-
-    // String - Scale label font colour
-    scaleFontColor: "#666",
-
-    // Boolean - whether or not the chart should be responsive and resize when the browser does.
-    responsive: false,
-
-    // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-    maintainAspectRatio: true,
-
-    // Boolean - Determines whether to draw tooltips on the canvas or not
-    showTooltips: true,
-
-    // Function - Determines whether to execute the customTooltips function instead of drawing the built in tooltips (See [Advanced - External Tooltips](#advanced-usage-custom-tooltips))
-    customTooltips: false,
-
-    // Array - Array of string names to attach tooltip events
-    tooltipEvents: ["mousemove", "touchstart", "touchmove"],
-
-    // String - Tooltip background colour
-    tooltipFillColor: "rgba(0,0,0,0.8)",
-
-    // String - Tooltip label font declaration for the scale label
-    tooltipFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-
-    // Number - Tooltip label font size in pixels
-    tooltipFontSize: 14,
-
-    // String - Tooltip font weight style
-    tooltipFontStyle: "normal",
-
-    // String - Tooltip label font colour
-    tooltipFontColor: "#fff",
-
-    // String - Tooltip title font declaration for the scale label
-    tooltipTitleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-
-    // Number - Tooltip title font size in pixels
-    tooltipTitleFontSize: 14,
-
-    // String - Tooltip title font weight style
-    tooltipTitleFontStyle: "bold",
-
-    // String - Tooltip title font colour
-    tooltipTitleFontColor: "#fff",
-
-    // Number - pixel width of padding around tooltip text
-    tooltipYPadding: 6,
-
-    // Number - pixel width of padding around tooltip text
-    tooltipXPadding: 6,
-
-    // Number - Size of the caret on the tooltip
-    tooltipCaretSize: 8,
-
-    // Number - Pixel radius of the tooltip border
-    tooltipCornerRadius: 6,
-
-    // Number - Pixel offset from point x to tooltip edge
-    tooltipXOffset: 10,
-
-    // String - Template string for single tooltips
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
-
-    // String - Template string for multiple tooltips
-    multiTooltipTemplate: "<%= value %>",
-
-    // Function - Will fire on animation progression.
-    onAnimationProgress: function(){},
-
-    // Function - Will fire on animation completion.
-    onAnimationComplete: function(){}
-}
 
 app.controller ("MainDataController", function ($scope) {
 
+
+    $scope.search = function () {
+        var name = $(".search-text")[0].value;
+        console.log("Searching for "+name+"...");
+        new_name(name);
+    };
+
+    /*
     var ctx = document.getElementById("myChart").getContext("2d");
 
     $scope.data = {
@@ -158,6 +44,7 @@ app.controller ("MainDataController", function ($scope) {
 
 
     var myBarChart = new Chart(ctx).Bar($scope.data);
+    */
     $scope.name = "";
     $scope.repos = [];
     $scope.biggest_repos = [
@@ -216,7 +103,7 @@ app.controller ("MainDataController", function ($scope) {
                 $scope.counter = 0
                 $.ajax({
                     url: 'https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages"+"?client_id="+client_id+"&client_secret="+client_secret,
-                    async: false
+                    async: true
                 }).done(function (data) {
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
@@ -265,6 +152,9 @@ app.controller ("MainDataController", function ($scope) {
                 });
 
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
+                    if (!(data.forEach)) {
+                        console.dir(data);
+                    }
                     data.forEach(function(el, i, arr) {
                         if(el.author.login.toLowerCase() == $scope.name) {
                             el.weeks.forEach(function (week, j, week_arr) {
@@ -288,16 +178,16 @@ app.controller ("MainDataController", function ($scope) {
 
 
         });
-    };
-    new_name("echiou");
-    setTimeout(function () {
-        console.log($scope.commits)
-        console.log($scope.biggest_repos)
-        console.log($scope.languages)
-        console.log($scope.peers)
-        console.log($scope.stars)
-        console.log($scope.watchers)
-        console.log($scope.num_repos)
+        setTimeout(function () {
+            console.log($scope.commits)
+            console.log($scope.biggest_repos)
+            console.log($scope.languages)
+            console.log($scope.peers)
+            console.log($scope.stars)
+            console.log($scope.watchers)
+            console.log($scope.num_repos)
 
-    }, 5000)
+        }, 5000)
+    };
+    //new_name("echiou");
 });

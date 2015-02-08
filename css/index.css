@@ -1,0 +1,24 @@
+.big-search {
+    margin: 40vh 25vw;
+    position: absolute;
+}
+
+.btn-search {
+    background-color: #f8a543;
+}
+
+.logo {
+    position: absolute;
+    width: 20vw;
+    margin: 20vh 39vw;
+    text-align: center;
+}
+
+.searchbar {
+    height: 4em;
+}
+
+.splash {
+    height: 100%;
+    width: 100%;
+}
