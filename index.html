@@ -27,7 +27,7 @@
 <span class="headstuff">An amazingly simple analysis of github statistics</span>
 
 <div class="input-group col-md-6 big-search">
-    <input type="text" class="form-control searchbar search-text">
+    <input type="text" placeholder="Enter your github username here" class="form-control searchbar search-text">
     <span class="input-group-btn searchbar">
         <button class="btn btn-success btn-search searchbar" type="button" ng-click="search()">
             Go
@@ -73,7 +73,8 @@
         </span>
     </div>
 
-    <div>
+    <div class = "week">
+        <div class = "week-avg">Activity by Week Days</div>
         <canvas id="weekday-dist" width="1000" height="400" style="margin: 10vh 15vw;"></canvas>
     </div>
 
