@@ -51,7 +51,7 @@ app.controller ("MainDataController", function ($scope) {
                     $('.hide-this').hide('slow');
                 }, 4000);
             }, 1001);
-            circle.animate(1);
+            circle.animate(1, function() {circle.animate(0)});
             setTimeout(function () {
                 $('.graphs').show().css('opacity', 0);
                 $('.graphs').animate({opacity: 1, duration: 4000});
