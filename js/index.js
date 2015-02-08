@@ -255,7 +255,7 @@ app.controller ("MainDataController", function ($scope) {
                     });
                 });
 
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors').done(function(data) {
+                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/pu/contributors').done(function(data) {
                     data.forEach(function(el, i, arr) {
                         if(el.author == $scope.name) {
                             el.weeks.forEach(function (week, j, week_arr) {
