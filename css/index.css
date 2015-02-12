@@ -4,7 +4,8 @@
 }
 
 body {
-    font-family: Titillium Web
+    font-family: Titillium Web;
+    min-width: 1280px;
 }
 .big-search {
     margin: 44vh 25vw;
@@ -21,6 +22,7 @@ body {
     margin-left: 140px;
     margin-top: 50px;
     width: 38vw;
+    min-width: 400px;
     border: 2px solid lightgray;
     padding: 1em 1em;
 }
@@ -122,20 +124,18 @@ body {
 }
 
 .repos, .commits, .lines {
-    width: 200px;
+    width: 12vw;
     height: 120px;
-    padding-left: 30px;
-    padding-right: 30px;
     padding-top: 20px;
     margin-top: 30px;
     color: #717171;
-    font-size: 1.5em;
+    font-size: 1.5vh;
     float: left;
     background-color: white;
 }
 
 .repos {
-    margin-left: 25vw;
+    /*margin-left: 25vw;*/
 }
 
 .commits {
@@ -144,17 +144,17 @@ body {
 }
 
 .num-repos {
-    font-size: 35px;
+    font-size: 1.9vw;
     color: black;
 }
 
 .num-commits {
-    font-size: 35px;
+    font-size: 1.9vw;
     color: black;
 }
 
 .num-lines {
-    font-size: 35px;
+    font-size: 1.9vw;
     color: black;
 }
 
@@ -217,7 +217,6 @@ body {
     margin-top: 400px;
 }
 .week-avg {
-    bottom: 0;
     margin-top: 70vh;
     width: 100vw;
     text-align: center;
