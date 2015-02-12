@@ -135,7 +135,7 @@ body {
 }
 
 .repos {
-    margin-left: 16vw;
+    margin-left: 25vw;
 }
 
 .commits {
@@ -217,11 +217,9 @@ body {
     margin-top: 400px;
 }
 .week-avg {
-    margin-right: 22vw;
-    margin-left: 22vw;
-    position: absolute;
-    margin-top: 300px;
-    width: 700px;
+    bottom: 0;
+    margin-top: 70vh;
+    width: 100vw;
     text-align: center;
     font-size: 50px;
     font-weight: strong;
