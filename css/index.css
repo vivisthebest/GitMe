@@ -81,11 +81,12 @@ body {
 
 .languages-doughnut {
     float: right;
-    margin-left: 10vw;
-    margin-right: 16vw;
+    margin-left: 5vw;
+    margin-right: 10vw;
     margin-top: 8vh;
     margin-bottom: 14vh;
 }
+
 
 #loader {
     width: 20vw;
