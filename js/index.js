@@ -186,48 +186,6 @@ app.controller ("MainDataController", function ($scope) {
                     if (e!=BreakException) throw e;
                 }
 
-
-                // var ctx = document.getElementById("languages-doughnut").getContext("2d");
-
-                var colors = [
-                    ["#00FFB1", "#36C19A"],
-                    ["#230CE8", "#260CE8"],
-                    ["#FF0000", "#FF3400"],
-                    ["#E8A80C", "#E8C70C"],
-                    ["#29FF00", "#00FF3E"],
-                    ["#190CC1", "#332DC1"],
-                    ["#E80C9D", "#E837A7"],
-                    ["#FF6700", "#FF8930"],
-                    ["#E8CC0C", "#E8D737"],
-                    ["#05FF00", "#30FF49"],
-                    ["#270DC1", "#442FC1"],
-                    ["#E80C76", "#E83587"],
-                    ["#FF7700", "#FF932E"],
-                    ["#E8D600", "#E8DD2A"],
-                    ["#03FF27", "#45FF6D"]
-                ];
-                var data = [];
-                try {
-                    Object.keys($scope.languages).forEach(function (lang, i, arr) {
-                        if (i == 10) {
-                            throw BreakException
-                        }
-                        data.push({
-                            value: $scope.languages[lang],
-                            color: colors[i][0],
-                            highlight: colors[i][1],
-                            label: lang
-                        });
-                    });
-                } catch (e) {
-                    if (e != BreakException) throw e;
-                }
-
-                var myDoughnut = new Chart(ctx).Doughnut(data)
-
-
-
-
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/punch_card'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
                         $scope.weekday_avgs[el[0]] += el[2];
@@ -270,6 +228,35 @@ app.controller ("MainDataController", function ($scope) {
                     });
                 });
             });
+            var langs = [['Language', 'Bytes']];
+            Object.keys($scope.languages).forEach(function(lang){
+                langs.push([ lang, $scope.languages[lang] ]);
+            });
+            console.log(langs);
+
+            google.load("visualization", "1", {packages:["corechart"], callback: drawChart});
+
+            function drawChart() {
+                console.log("testing");
+                var data = google.visualization.arrayToDataTable(langs);
+
+                var options = {
+                    pieHole: 0.4,
+                    chartArea: {
+                        width: '80%',
+                        height: '80%'
+                    },
+                    sliceVisibilityThreshold: .05,
+                    width: 400,
+                    height: 400,
+                    pieSliceText: "none"
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('languages-doughnut'));
+
+                chart.draw(data, options);
+            }
+
             setInterval(function() {
                 if($scope.biggest_repos[0].size >= 0) {
                     $('.ind-repo-0').text($scope.biggest_repos[0].name);
