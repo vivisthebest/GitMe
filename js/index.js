@@ -187,7 +187,7 @@ app.controller ("MainDataController", function ($scope) {
                 }
 
 
-                var ctx = document.getElementById("languages-doughnut").getContext("2d");
+                // var ctx = document.getElementById("languages-doughnut").getContext("2d");
 
                 var colors = [
                     ["#00FFB1", "#36C19A"],
