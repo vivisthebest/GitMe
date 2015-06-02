@@ -30,13 +30,24 @@ window.onload = function onLoad() {
 app.controller ("MainDataController", function ($scope) {
 
 
+    $scope.name = '';
+
     $scope.name_refresh = function () {
         $scope.apply();
         return $scope.full_name;
     }
-    $scope.search = function () {
+
+    var url = window.location.href;
+
+    $scope.search = function (name) {
         setTimeout(function() {
-            var name = $(".search-text")[0].value;
+            if (name === undefined) {
+                $scope.name = $(".search-text")[0].value;
+                window.location = window.location.href + "#" + $scope.name;
+            } else {
+                $scope.name = name
+            }
+            console.log($scope.name);
             $('.splash').slideUp(1000);
             $('.logo').animate({opacity: 0});
             $('.headstuff').animate({opacity:0});
@@ -56,43 +67,18 @@ app.controller ("MainDataController", function ($scope) {
                 $('.graphs').show().css('opacity', 0);
                 $('.graphs').animate({opacity: 1, duration: 4000});
             }, 5700);
-            console.log("Searching for "+name+"...");
-            new_name(name);
-        }, 400);
+            console.log("Searching for "+$scope.name+"...");
+            new_name($scope.name);
+        }, 200);
     };
 
+    if (/#/.test(url)){
+        console.log(url);
+        $scope.name = url.match(/#(\w+)/)[1];
+        console.log($scope.name);
+        $scope.search($scope.name);
+    }
 
-    /*
-    $scope.data = {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [
-            {
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(220,220,220,0.8)",
-                highlightFill: "rgba(220,220,220,0.75)",
-                highlightStroke: "rgba(220,220,220,1)",
-                data: [65, 59, 80, 81, 56, 55, 40]
-            },
-            {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.5)",
-                strokeColor: "rgba(151,187,205,0.8)",
-                highlightFill: "rgba(151,187,205,0.75)",
-                highlightStroke: "rgba(151,187,205,1)",
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
-        ]
-    };
-
-    setTimeout(function () {
-      myBarChart.datasets[0].bars[0].value -= 20;
-      myBarChart.update();
-    }, 2000);
-
-
-    var myBarChart = new Chart(ctx).Bar($scope.data);
-    */
 
     $scope.name = "";
     $scope.repos = [];
@@ -139,7 +125,7 @@ app.controller ("MainDataController", function ($scope) {
         client_secret = "f143655f867cb8ae4036101c32c1bef807c7f3bb";
 
     var new_name = function (name) {
-        $scope.name = name.toLowerCase();
+        $scope.name = $scope.name.toLowerCase();
         $.ajax("https://api.github.com/users/"+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
             $scope.full_name = data.name;
             $scope.profile_url = data.avatar_url;
@@ -159,11 +145,10 @@ app.controller ("MainDataController", function ($scope) {
                 $scope.stars += repo['stargazers_count'];
                 $scope.watchers += repo['watchers_count'];
                 $scope.open_issues += repo['open_issues_count'];
-                $scope.counter = 0
                 $.ajax({
-                    url: 'https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages"+"?client_id="+client_id+"&client_secret="+client_secret,
-                    async: false
+                    url: 'https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages"+"?client_id="+client_id+"&client_secret="+client_secret
                 }).done(function (data) {
+                    $scope.counter = 0
                     Object.keys(data).forEach(function (el, i, arr) {
                         if($scope.languages[el] == undefined) {
                             $scope.languages[el] = 0;
@@ -171,20 +156,79 @@ app.controller ("MainDataController", function ($scope) {
                         $scope.languages[el] += data[el];
                         $scope.counter += data[el];
                     });
+                    try {
+                        $scope.biggest_repos.forEach(function (el, i, arr) {
+                            if($scope.counter > el['size']) {
+                                $scope.biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
+                                $scope.biggest_repos.pop();
+                                throw BreakException;
+                            }
+                        });
+                    } catch (e) {
+                        if (e!=BreakException) throw e;
+                    }
+
+                    if($scope.biggest_repos[0].size >= 0) {
+                        $('.ind-repo-0').text($scope.biggest_repos[0].name);
+                        $('.ind-repo-0-bits').text(numberWithCommas($scope.biggest_repos[0].size));
+                    }
+                    if($scope.biggest_repos[1].size >= 0) {
+                        $('.ind-repo-1').text($scope.biggest_repos[1].name);
+                        $('.ind-repo-1-bits').text(numberWithCommas($scope.biggest_repos[1].size));
+                    }
+                    if ($scope.biggest_repos[2].size >= 0) {
+                        $('.ind-repo-2').text($scope.biggest_repos[2].name);
+                        $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
+                    }
+                    $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
+                        data.forEach(function(el, i, arr) {
+                            if(el.author.login.toLowerCase() == $scope.name) {
+                                el.weeks.forEach(function (week, j, week_arr) {
+                                    $scope.lines += week.a;
+                                    $scope.lines -= week.d;
+                                });
+                            } else {
+                                if (el.author != null) {
+                                    if (!(el.author.login in $scope.peers)) {
+                                        $scope.peers[el.author.login] = 0;
+                                        el.weeks.forEach(function (week, j, week_arr) {
+                                            $scope.peers[el.author.login] += week.a;
+                                            $scope.peers[el.author.login] -= week.d;
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                        // TODO: fetch the current value of the language, instead of whatever is going on now
+                        $('.num-bytes').text(numberWithCommas($scope.lines));
+                        var langs = [['Language', 'Bytes']];
+                        Object.keys($scope.languages).forEach(function(lang){
+                            langs.push([ lang, $scope.languages[lang] ]);
+                        });
+
+                        google.load("visualization", "1", {packages:["corechart"], callback: drawChart});
+
+                        function drawChart() {
+                            var data = google.visualization.arrayToDataTable(langs);
+
+                            var options = {
+                                chartArea:{width:'90%',height:'100%'},
+                                height: 400,
+                                pieHole: 0.4,
+                                pieSliceText: "none",
+                                sliceVisibilityThreshold: .05,
+                                width: 400
+                            };
+
+                            var chart = new google.visualization.PieChart(document.getElementById('languages-doughnut'));
+
+                            chart.draw(data, options);
+                        }
+                    });
 
                 });
 
-                try {
-                    $scope.biggest_repos.forEach(function (el, i, arr) {
-                        if($scope.counter > el['size']) {
-                            $scope.biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
-                            $scope.biggest_repos.pop();
-                            throw BreakException;
-                        }
-                    });
-                } catch (e) {
-                    if (e!=BreakException) throw e;
-                }
+
 
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/punch_card'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                     data.forEach(function(el, i, arr) {
@@ -203,77 +247,8 @@ app.controller ("MainDataController", function ($scope) {
                     $('.num-commits').text(numberWithCommas($scope.commits));
                 });
 
-                $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
-                    if (!(data.forEach)) {
-                        console.dir(data);
-                        return;
-                    }
-                    data.forEach(function(el, i, arr) {
-                        if(el.author.login.toLowerCase() == $scope.name) {
-                            el.weeks.forEach(function (week, j, week_arr) {
-                                $scope.lines += week.a;
-                                $scope.lines -= week.d;
-                            });
-                        } else {
-                            if (el.author != null) {
-                                if (!(el.author.login in $scope.peers)) {
-                                    $scope.peers[el.author.login] = 0;
-                                    el.weeks.forEach(function (week, j, week_arr) {
-                                        $scope.peers[el.author.login] += week.a;
-                                        $scope.peers[el.author.login] -= week.d;
-                                    });
-                                }
-                            }
-                        }
-                    });
-                });
+
             });
-            var langs = [['Language', 'Bytes']];
-            Object.keys($scope.languages).forEach(function(lang){
-                langs.push([ lang, $scope.languages[lang] ]);
-            });
-            console.log(langs);
-
-            google.load("visualization", "1", {packages:["corechart"], callback: drawChart});
-
-            function drawChart() {
-                console.log("testing");
-                var data = google.visualization.arrayToDataTable(langs);
-
-                var options = {
-                    pieHole: 0.4,
-                    chartArea: {
-                        width: '80%',
-                        height: '80%'
-                    },
-                    sliceVisibilityThreshold: .05,
-                    width: 400,
-                    height: 400,
-                    pieSliceText: "none"
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('languages-doughnut'));
-
-                chart.draw(data, options);
-            }
-
-            setInterval(function() {
-                if($scope.biggest_repos[0].size >= 0) {
-                    $('.ind-repo-0').text($scope.biggest_repos[0].name);
-                    $('.ind-repo-0-bits').text(numberWithCommas($scope.biggest_repos[0].size));
-                }
-                if($scope.biggest_repos[1].size >= 0) {
-                    $('.ind-repo-1').text($scope.biggest_repos[1].name);
-                    $('.ind-repo-1-bits').text(numberWithCommas($scope.biggest_repos[1].size));
-                }
-                if ($scope.biggest_repos[2].size >= 0) {
-                    $('.ind-repo-2').text($scope.biggest_repos[2].name);
-                    $('.ind-repo-2-bits').text(numberWithCommas($scope.biggest_repos[2].size));
-                }
-                $('.num-lines').text(numberWithCommas($scope.lines));
-            }, 3000);
-
-
         });
         setTimeout(function () {
             var data = {
@@ -298,35 +273,6 @@ app.controller ("MainDataController", function ($scope) {
     //new_name("echiou");
 });
 
-var doughnut_options = {
-    //Boolean - Whether we should show a stroke on each segment
-    segmentShowStroke : false,
-
-    //String - The colour of each segment stroke
-    segmentStrokeColor : "#fff",
-
-    //Number - The width of each segment stroke
-    segmentStrokeWidth : 2,
-
-    //Number - The percentage of the chart that we cut out of the middle
-    percentageInnerCutout : 50, // This is 0 for Pie charts
-
-    //Number - Amount of animation steps
-    animationSteps : 100,
-
-    //String - Animation easing effect
-    animationEasing : "easeOutBounce",
-
-    //Boolean - Whether we animate the rotation of the Doughnut
-    animateRotate : false,
-
-    //Boolean - Whether we animate scaling the Doughnut from the centre
-    animateScale : false,
-
-    //String - A legend template
-    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-
-}
 
 var bar_options = {
     //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value

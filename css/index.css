@@ -5,8 +5,16 @@
 
 body {
     font-family: Titillium Web;
-    min-width: 1280px;
+    min-width: 1200px;
 }
+
+.all-repos {
+    overflow: auto;
+    overflow-y: hidden;
+    width: 100%;
+    padding: 0 3%;
+}
+
 .big-search {
     margin: 44vh 25vw;
     position: absolute;
@@ -17,13 +25,11 @@ body {
 }
 
 .biggest-repos {
-    float: left;
-    font-size: 2em;
-    margin-left: 140px;
-    margin-top: 50px;
-    width: 38vw;
-    min-width: 400px;
     border: 2px solid lightgray;
+    display: inline-block;
+    font-size: 2em;
+    height: calc(1.2em + 400px + 2.2em);
+    min-width: 400px;
     padding: 1em 1em;
 }
 
@@ -40,6 +46,11 @@ body {
     background-color: #E29F50;
 }
 
+.commits {
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+
 .doughnut-head {
     text-align: center;
     font-size: 2.2em;
@@ -54,9 +65,12 @@ body {
 }
 
 .graphs {
+    background-color: lightgrey;
     display: none;
-    position: absolute
-    width: 100vw;
+    min-width: 1200px;
+    position: absolute;
+    width: 100%;
+    padding: 0 10% 0 10%;
 }
 
 .headstuff {
@@ -81,11 +95,9 @@ body {
 
 .languages-doughnut {
     float: right;
-    margin-left: 10vw;
-    margin-right: 16vw;
-    margin-top: 8vh;
-    margin-bottom: 14vh;
+    display: inline-block;
 }
+
 
 #loader {
     width: 20vw;
@@ -108,6 +120,39 @@ body {
     color: white;
     margin: 10vh 41vw;
     text-align: center;
+}
+
+
+
+.num-repos {
+    font-size: 1.9vw;
+    color: black;
+}
+
+.num-commits {
+    font-size: 1.9vw;
+    color: black;
+}
+
+.num-bytes {
+    font-size: 1.9vw;
+    color: black;
+}
+
+.OCTOCAT {
+    position: absolute;
+    margin: 60vh 0 0 40vw;
+}
+
+.prof {
+    width: 180px;
+    height: 180px;
+    display: absolute;
+    margin: 8vh auto;
+    border: 5px solid white;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
 }
 
 .repo-0 {
@@ -136,43 +181,6 @@ body {
 }
 
 .repos {
-    /*margin-left: 25vw;*/
-}
-
-.commits {
-    margin-left: 10vw;
-    margin-right: 10vw;
-}
-
-.num-repos {
-    font-size: 1.9vw;
-    color: black;
-}
-
-.num-commits {
-    font-size: 1.9vw;
-    color: black;
-}
-
-.num-lines {
-    font-size: 1.9vw;
-    color: black;
-}
-
-.OCTOCAT {
-    position: absolute;
-    margin: 60vh 0 0 40vw;
-}
-
-.prof {
-    width: 180px;
-    height: 180px;
-    display: absolute;
-    margin: 8vh 42vw;
-    border: 5px solid white;
-    border-radius: 100px;
-    -webkit-border-radius: 100px;
-    -moz-border-radius: 100px;
 }
 
 .searchbar {
@@ -182,9 +190,10 @@ body {
 .search-text {
     width: 40vw;
 }
-@media (min-width: 768px)
-.form-inline .form-control {
-    width: 40vw;
+
+.smaller {
+    display: inline;
+    font-size: 60%;
 }
 
 .splash {
@@ -211,17 +220,22 @@ body {
 
 .week {
     text-align: center;
-    margin-top: 200px;
 }
 
-#week-dist {
-    margin-top: 400px;
-}
 .week-avg {
-    margin-top: 70vh;
-    width: 100vw;
+    width: 100%;
     text-align: center;
     font-size: 50px;
     font-weight: strong;
 
+}
+
+#weekday-dist {
+    width: 1000px;
+    height: 400px;
+    padding-bottom: 20px;
+}
+
+.white {
+    background-color: white;
 }
