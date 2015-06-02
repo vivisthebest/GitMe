@@ -3,6 +3,12 @@
     src: url('../assets/fonts/titillium_web/TitilliumWeb-Regular.ttf');
 }
 
+.back {
+    position: absolute;
+    margin: 1em 1em;
+    z-index: 9999;
+}
+
 body {
     font-family: Titillium Web;
     min-width: 1200px;
@@ -70,7 +76,8 @@ body {
     min-width: 1200px;
     position: absolute;
     width: 100%;
-    padding: 0 10% 0 10%;
+    padding: 0 0;
+    position: relative;
 }
 
 .headstuff {

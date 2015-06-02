@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="bower_components/Chart.js/Chart.js"></script>
     <script src="bower_components/progressbar.js/dist/progressbar.min.js"></script>
     <script src="js/index.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <link rel="stylesheet" href="css/index.css" />
 </head>
 <body ng-controller="MainDataController">
@@ -40,6 +41,7 @@
 
 <div class='graphs'>
     <div class='white'>
+        <a class="back" ng-click="home()"><i class="fa fa-angle-left fa-3x"></i></a>
         <div class="top-header">
             <img class="prof" src=""></img>
             <div class="full-name"></div>

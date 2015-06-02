@@ -29,21 +29,28 @@ window.onload = function onLoad() {
 
 app.controller ("MainDataController", function ($scope) {
 
+    var url = window.location.href;
+
+    $scope.home = function () {
+        url = window.location.href;
+        if (/#/.test(url)) {
+            window.location = url.substr(0, url.search("#"));
+        }
+    };
 
     $scope.name = '';
 
     $scope.name_refresh = function () {
         $scope.apply();
         return $scope.full_name;
-    }
+    };
 
-    var url = window.location.href;
 
     $scope.search = function (name) {
         setTimeout(function() {
             if (name === undefined) {
                 $scope.name = $(".search-text")[0].value;
-                window.location = window.location.href + "#" + $scope.name;
+                window.location = window.location.href + "#" + $scope.name.toLowerCase();
             } else {
                 $scope.name = name
             }
@@ -306,6 +313,7 @@ var bar_options = {
     barDatasetSpacing : 3,
 
     //String - A legend template
-    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.l"+
+        "ength; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
 
 }
