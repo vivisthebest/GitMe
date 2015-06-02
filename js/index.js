@@ -5,26 +5,21 @@ var BreakException = {};
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
-
 var circle = 0;
-window.onload = function onLoad() {
-    circle = new ProgressBar.Circle('#loader', {
-        color: '#FCB03C',
-        strokeWidth: 3.5,
-        trailWidth: 1.5,
-        duration: 5000,
-        easing: 'easeInOut',
-        text: {
-            value: '0'
-        },
-        step: function(state, bar) {
-            bar.setText((bar.value() * 100).toFixed(0));
-        }
-    });
-    $('#loader').hide();
-    $('.loader').hide();
-
-};
+circle = new ProgressBar.Circle('#loader', {
+    color: '#FCB03C',
+    strokeWidth: 3.5,
+    trailWidth: 1.5,
+    duration: 5000,
+    easing: 'easeInOut',
+    text: {
+        value: '0'
+    },
+    step: function(state, bar) {
+        bar.setText((bar.value() * 100).toFixed(0));
+    }
+});
+$('.hide-this').hide();
 
 
 app.controller ("MainDataController", function ($scope) {
@@ -47,45 +42,35 @@ app.controller ("MainDataController", function ($scope) {
 
 
     $scope.search = function (name) {
-        setTimeout(function() {
             if (name === undefined) {
                 $scope.name = $(".search-text")[0].value;
                 window.location = window.location.href + "#" + $scope.name.toLowerCase();
             } else {
                 $scope.name = name
             }
-            console.log($scope.name);
-            $('.splash').slideUp(1000);
+            $('.splash').slideUp(1000, function () {
+                $('.hide-this').show();
+                $('.loader').css('opacity', 0);
+                $('.loader').animate({opacity: 1, duration: 500})
+            });
             $('.logo').animate({opacity: 0});
             $('.headstuff').animate({opacity:0});
             $('.big-search').animate({opacity:0});
             $('.OCTOCAT').animate({opacity:0});
-            setTimeout(function() {
-                $('#loader').show();
-                $('.loader').show();
-                $('.loader').css('opacity', 0);
-                $('.loader').animate({opacity: 1, duration: 500})
-                setTimeout(function () {
-                    $('.hide-this').hide('slow');
-                }, 4000);
-            }, 1600);
-            circle.animate(1);
-            setTimeout(function () {
-                $('.graphs').show().css('opacity', 0);
-                $('.graphs').animate({opacity: 1, duration: 4000});
-            }, 5700);
+            circle.animate(
+                1,
+                {
+                    easing: "easeInOutExpo"
+                },
+                function () {
+                    $('.hide-this').hide('slow', function () {
+                        $('.graphs').show().css('opacity', 0);
+                        $('.graphs').animate({opacity: 1, duration: 4000});
+                    });
+                });
             console.log("Searching for "+$scope.name+"...");
             new_name($scope.name);
-        }, 200);
     };
-
-    if (/#/.test(url)){
-        console.log(url);
-        $scope.name = url.match(/#(\w+)/)[1];
-        console.log($scope.name);
-        $scope.search($scope.name);
-    }
-
 
     $scope.name = "";
     $scope.repos = [];
@@ -241,6 +226,23 @@ app.controller ("MainDataController", function ($scope) {
                     data.forEach(function(el, i, arr) {
                         $scope.weekday_avgs[el[0]] += el[2];
                     });
+                    if (repo_num === $scope.repos.length-1) {
+                        var data = {
+                            labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                            datasets: [
+                                {
+                                    label: "Days of the week",
+                                    fillColor: "#4EBAEE",
+                                    strokeColor: "#4EBAEE",
+                                    highlightFill: "rgba(220,220,220,0.75)",
+                                    highlightStroke: "rgba(220,220,220,1)",
+                                    data: $scope.weekday_avgs
+                                },
+                            ]
+                        };
+                        var ctx = document.getElementById("weekday-dist").getContext("2d");
+                        var myBarChart = new Chart(ctx).Bar(data, bar_options)
+                    }
                 });
 
                 $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/commits'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
@@ -257,27 +259,14 @@ app.controller ("MainDataController", function ($scope) {
 
             });
         });
-        setTimeout(function () {
-            var data = {
-                labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                datasets: [
-                    {
-                        label: "Days of the week",
-                        fillColor: "#4EBAEE",
-                        strokeColor: "#4EBAEE",
-                        highlightFill: "rgba(220,220,220,0.75)",
-                        highlightStroke: "rgba(220,220,220,1)",
-                        data: $scope.weekday_avgs
-                    },
-                ]
-            };
-
-            var ctx = document.getElementById("weekday-dist").getContext("2d");
-            var myBarChart = new Chart(ctx).Bar(data, bar_options)
-        }, 8500);
-
     };
-    //new_name("echiou");
+
+    if (/#/.test(url)){
+        console.log(url);
+        $scope.name = url.match(/#(\w+)/)[1];
+        console.log($scope.name);
+        $scope.search($scope.name);
+    }
 });
 
 
@@ -314,6 +303,7 @@ var bar_options = {
 
     //String - A legend template
     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.l"+
-        "ength; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+        "ength; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if"+
+        "(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
 
 }
