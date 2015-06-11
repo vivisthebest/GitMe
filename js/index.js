@@ -63,7 +63,8 @@ app.controller ("MainDataController", function ($scope) {
                     easing: "easeInOutExpo"
                 },
                 function () {
-                    $('.hide-this').hide('slow', function () {
+                    $('.hide-this').animate({opacity: 0}, function () {
+                        $(this).hide();
                         $('.graphs').show().css('opacity', 0);
                         $('.graphs').animate({opacity: 1, duration: 4000});
                     });
@@ -121,10 +122,8 @@ app.controller ("MainDataController", function ($scope) {
         $.ajax("https://api.github.com/users/"+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
             $scope.full_name = data.name;
             $scope.profile_url = data.avatar_url;
-            setInterval(function() {
-                $('.full-name').text($scope.full_name);
-                $('.prof').attr('src', $scope.profile_url);
-            }, 5200);
+            $('.full-name').text($scope.full_name);
+            $('.prof').attr('src', $scope.profile_url);
         });
         $.ajax('https://api.github.com/users/'+$scope.name+"?client_id="+client_id+"&client_secret="+client_secret).done(function (data) {
             $scope.num_repos = data['public_repos'];
@@ -134,9 +133,22 @@ app.controller ("MainDataController", function ($scope) {
             $scope.repos = data;
 
             $scope.repos.forEach(function (repo, repo_num, arr) {
-                $scope.stars += repo['stargazers_count'];
-                $scope.watchers += repo['watchers_count'];
-                $scope.open_issues += repo['open_issues_count'];
+                $scope.stars += repo.stargazers_count;
+                $scope.watchers += repo.watchers_count;
+                $scope.open_issues += repo.open_issues_count;
+                console.log(repo.name, repo.size);
+                try {
+                    $scope.biggest_repos.forEach(function (el, i, arr) {
+                        if(repo.size > el['size']) {
+                            $scope.biggest_repos.splice(i, 0, {'name': repo.name, 'size': repo.size});
+                            $scope.biggest_repos.pop();
+                            throw BreakException;
+                        }
+                    });
+                } catch (e) {
+                    if (e!=BreakException) throw e;
+                }
+
                 $.ajax({
                     url: 'https://api.github.com/repos/'+$scope.name+'/'+repo['name']+"/languages"+"?client_id="+client_id+"&client_secret="+client_secret
                 }).done(function (data) {
@@ -148,17 +160,17 @@ app.controller ("MainDataController", function ($scope) {
                         $scope.languages[el] += data[el];
                         $scope.counter += data[el];
                     });
-                    try {
-                        $scope.biggest_repos.forEach(function (el, i, arr) {
-                            if($scope.counter > el['size']) {
-                                $scope.biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
-                                $scope.biggest_repos.pop();
-                                throw BreakException;
-                            }
-                        });
-                    } catch (e) {
-                        if (e!=BreakException) throw e;
-                    }
+                    // try {
+                    //     $scope.biggest_repos.forEach(function (el, i, arr) {
+                    //         if($scope.counter > el['size']) {
+                    //             $scope.biggest_repos.splice(i, 0, {'name': repo['name'], 'size': $scope.counter});
+                    //             $scope.biggest_repos.pop();
+                    //             throw BreakException;
+                    //         }
+                    //     });
+                    // } catch (e) {
+                    //     if (e!=BreakException) throw e;
+                    // }
 
                     if($scope.biggest_repos[0].size >= 0) {
                         $('.ind-repo-0').text($scope.biggest_repos[0].name);
@@ -174,20 +186,17 @@ app.controller ("MainDataController", function ($scope) {
                     }
                     $.ajax('https://api.github.com/repos/'+$scope.name+'/'+repo['name']+'/stats/contributors'+"?client_id="+client_id+"&client_secret="+client_secret).done(function(data) {
                         data.forEach(function(el, i, arr) {
-                            if(el.author.login.toLowerCase() == $scope.name) {
+                            if(el.author.login.toLowerCase() === $scope.name) {
                                 el.weeks.forEach(function (week, j, week_arr) {
                                     $scope.lines += week.a;
-                                    $scope.lines -= week.d;
+                                    // $scope.lines -= week.d;
                                 });
                             } else {
-                                if (el.author != null) {
-                                    if (!(el.author.login in $scope.peers)) {
-                                        $scope.peers[el.author.login] = 0;
-                                        el.weeks.forEach(function (week, j, week_arr) {
-                                            $scope.peers[el.author.login] += week.a;
-                                            $scope.peers[el.author.login] -= week.d;
-                                        });
-                                    }
+                                if (el.author != null && !(el.author.login in $scope.peers)) {
+                                    $scope.peers[el.author.login] = 0;
+                                    el.weeks.forEach(function (week, j, week_arr) {
+                                        $scope.peers[el.author.login] += week.a;
+                                    });
                                 }
                             }
                         });

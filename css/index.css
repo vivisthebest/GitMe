@@ -12,6 +12,7 @@
 body {
     font-family: Titillium Web;
     min-width: 1200px;
+    font-size: 100%;
 }
 
 .all-repos {
@@ -53,8 +54,8 @@ body {
 }
 
 .commits {
-    margin-left: 10vw;
-    margin-right: 10vw;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .doughnut-head {
@@ -67,7 +68,7 @@ body {
     font-size: 3em;
     margin-top: -10px;
     color: white;
-    text-shadow: 1px 1px #000000;
+    text-shadow: 1px 1px darkgrey;
 }
 
 .graphs {
@@ -86,6 +87,10 @@ body {
     color: white;
     position: absolute;
     margin: 28vh 29vw;
+}
+
+.hide-this {
+    text-align: center;
 }
 
 .ind-repo-0-bits {
@@ -108,16 +113,16 @@ body {
 
 #loader {
     width: 20vw;
-    font-size: 4em;
+    font-size: 5em;
     position: absolute;
     top: 20vh;
     margin-left: 40vw;
 }
 
 .loader {
-    font-size: 2.5em;
-    margin-top: 28vh;
-    margin-left: 38vw;
+    display: inline-block;
+    font-size: 4em;
+    margin-top: 12%;
 }
 
 .logo {
@@ -132,17 +137,17 @@ body {
 
 
 .num-repos {
-    font-size: 1.9vw;
+    font-size: 2.3em;
     color: black;
 }
 
 .num-commits {
-    font-size: 1.9vw;
+    font-size: 2.3em;
     color: black;
 }
 
 .num-bytes {
-    font-size: 1.9vw;
+    font-size: 2.3em;
     color: black;
 }
 
@@ -152,14 +157,15 @@ body {
 }
 
 .prof {
-    width: 180px;
-    height: 180px;
-    display: absolute;
-    margin: 8vh auto;
     border: 5px solid white;
     border-radius: 100px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
+    box-shadow: 1px 1px 0 darkgrey;
+    display: absolute;
+    height: 180px;
+    margin: 8vh auto;
+    width: 180px;
 }
 
 .repo-0 {
@@ -176,18 +182,17 @@ body {
 }
 
 .repos, .commits, .lines {
-    width: 12vw;
-    height: 5.5vw;
-    padding-top: 0.5vw;
-    padding-bottom: 0.25vw;
-    margin-top: 30px;
-    color: #717171;
-    font-size: 1.5vh;
-    float: left;
     background-color: white;
-}
-
-.repos {
+    box-shadow: 1px 1px 0 darkgrey;
+    color: #717171;
+    font-size: 1em;
+    float: left;
+    height: 13%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30%;
 }
 
 .searchbar {
@@ -214,11 +219,17 @@ body {
 
 }
 
+.stats {
+    display: inline-block;
+    width: 40%;
+    text-align: center;
+}
+
 .top-header {
     top: 0;
     height: 80vh;
     background-image: url('../assets/img/Background2.png');
-    background-size: 100% 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     margin-bottom: 50px;
     position: relative;
