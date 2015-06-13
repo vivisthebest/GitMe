@@ -24,67 +24,66 @@
 
 <div class="container splash">
 
-<span class="logo" >GitMe</span>
-<span class="headstuff">An amazingly simple analysis of github statistics</span>
+<div class="logo" >GitMe</div>
+<div class="headstuff">An amazingly simple analysis of github statistics</div>
 
 <div class="input-group  big-search">
     <input type="text" placeholder="Enter your github username here" class="form-control searchbar search-text" ng-keyup="$event.keyCode == 13 ? search() : null">
-    <span class="input-group-btn searchbar">
+    <div class="input-group-btn searchbar">
         <button class="btn btn-success btn-search searchbar" type="button" ng-click="search()">
             Go
         </button>
-    </span>
+    </div>
 </div>
 
 <img src="assets/img/Octocat.png" class="OCTOCAT"></img>
+<img src="assets/img/Background.png" class="backg"></img>
 
 </div>
 
 <div class='graphs'>
-    <div class='white'>
-        <a class="back" ng-click="home()"><i class="fa fa-angle-left fa-3x"></i></a>
-        <div class="top-header">
-            <img class="prof" src=""></img>
-            <div class="full-name"></div>
-            <div class="stats">
-                <span class="repos">
-                    <div class="num-repos"></div>
-                    <div>
-                    repos
-                    </div>
-                </span>
-                <span class="commits">
-                    <div class="num-commits"></div>
-                    <div>
-                    commits
-                    </div>
-                </span>
-                <span class="lines">
-                    <div class="num-bytes"></div>
-                    <div>
-                    bytes  committed
-                    </div>
-                </span>
-            </div>
+    <a class="back" ng-click="home()"><i class="fa fa-angle-left fa-3x"></i></a>
+    <div class="top-header">
+        <img class="prof" src=""></img>
+        <div class="full-name"></div>
+        <div class="stats">
+            <span class="repos">
+                <div class="num-repos"></div>
+                <div>
+                repos
+                </div>
+            </span>
+            <span class="commits">
+                <div class="num-commits"></div>
+                <div>
+                commits
+                </div>
+            </span>
+            <span class="lines">
+                <div class="num-bytes"></div>
+                <div>
+                bytes  committed
+                </div>
+            </span>
         </div>
+    </div>
 
-        <div class="all-repos">
-            <div class="biggest-repos">
-                <div class="big-title">Largest Repositories <div class="smaller">(total size in kb)</div></div>
-                <div class='repo-0'><span class="ind-repo-0"></span><span class="ind-repo-0-bits"></span></div>
-                <div class='repo-1'><span class="ind-repo-1"></span><span class="ind-repo-1-bits"></span></div>
-                <div class='repo-2'><span class="ind-repo-2"></span><span class="ind-repo-2-bits"></span></div>
-            </div>
-            <div class="languages-doughnut">
-                <div class='doughnut-head'>Languages</div>
-                <div id="languages-doughnut"></div>
-            </div>
+    <div class="all-repos">
+        <div class="biggest-repos">
+            <div class="big-title">Largest Repositories <div class="smaller">(total size in kb)</div></div>
+            <div class='repo-0'><span class="ind-repo-0"></span><span class="ind-repo-0-bits"></span></div>
+            <div class='repo-1'><span class="ind-repo-1"></span><span class="ind-repo-1-bits"></span></div>
+            <div class='repo-2'><span class="ind-repo-2"></span><span class="ind-repo-2-bits"></span></div>
         </div>
+        <div class="languages-doughnut">
+            <div class='doughnut-head'>Languages</div>
+            <div id="languages-doughnut"></div>
+        </div>
+    </div>
 
-        <div class = "week">
-            <div class = "week-avg">Activity by Week Days</div>
-            <canvas id="weekday-dist" width="1000px" height="400px" ></canvas>
-        </div>
+    <div class = "week">
+        <div class = "week-avg">Activity by Week Days</div>
+        <canvas id="weekday-dist" width="1000px" height="400px" ></canvas>
     </div>
 </div>
 

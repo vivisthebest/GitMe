@@ -3,28 +3,34 @@
     src: url('../assets/fonts/titillium_web/TitilliumWeb-Regular.ttf');
 }
 
+.all-repos {
+    display: flex;
+    justify-content: space-around;
+    padding: 0 3%;
+}
+
 .back {
     position: absolute;
     margin: 1em 1em;
     z-index: 9999;
 }
 
-body {
-    font-family: Titillium Web;
-    min-width: 1200px;
-    font-size: 100%;
+.backg {
+    height: 100%;
+    min-height: 700px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-bottom: 11%;
+    width: 100%;
+    z-index: -1;
 }
 
-.all-repos {
-    overflow: auto;
-    overflow-y: hidden;
-    width: 100%;
-    padding: 0 3%;
-}
 
 .big-search {
-    margin: 44vh 25vw;
-    position: absolute;
+    margin: 0 auto;
+    margin-top: 8%;
+    width: 52%;
 }
 
 .big-title {
@@ -38,6 +44,12 @@ body {
     height: calc(1.2em + 400px + 2.2em);
     min-width: 400px;
     padding: 1em 1em;
+}
+
+body {
+    font-family: Titillium Web;
+    min-width: 1200px;
+    font-size: 100%;
 }
 
 .btn-search {
@@ -72,9 +84,8 @@ body {
 }
 
 .graphs {
-    background-color: lightgrey;
+    background-color: white;
     display: none;
-    min-width: 1200px;
     position: absolute;
     width: 100%;
     padding: 0 0;
@@ -82,11 +93,9 @@ body {
 }
 
 .headstuff {
-    font-family: Titillium Web;
-    font-size: 1.8em;
     color: white;
-    position: absolute;
-    margin: 28vh 29vw;
+    font-size: 1.8em;
+    margin-top: 2%;
 }
 
 .hide-this {
@@ -106,17 +115,17 @@ body {
 }
 
 .languages-doughnut {
-    float: right;
+    /*float: right;*/
     display: inline-block;
 }
 
 
 #loader {
-    width: 20vw;
+    width: 20%;
     font-size: 5em;
     position: absolute;
-    top: 20vh;
-    margin-left: 40vw;
+    top: 20%;
+    margin-left: 40%;
 }
 
 .loader {
@@ -126,11 +135,11 @@ body {
 }
 
 .logo {
-    position: absolute;
     text-shadow: 1px 1px #000000;
-    font-size: 6em;
+    font-size: 7em;
     color: white;
-    margin: 10vh 41vw;
+    margin-top: 5%;
+    width: 100%;
     text-align: center;
 }
 
@@ -152,8 +161,7 @@ body {
 }
 
 .OCTOCAT {
-    position: absolute;
-    margin: 60vh 0 0 40vw;
+    margin-top: 4%;
 }
 
 .prof {
@@ -164,7 +172,7 @@ body {
     box-shadow: 1px 1px 0 darkgrey;
     display: absolute;
     height: 180px;
-    margin: 8vh auto;
+    margin: 8% auto;
     width: 180px;
 }
 
@@ -185,13 +193,13 @@ body {
     background-color: white;
     box-shadow: 1px 1px 0 darkgrey;
     color: #717171;
-    font-size: 1em;
-    float: left;
-    height: 13%;
-    margin-top: 30px;
     display: flex;
     flex-direction: column;
+    float: left;
+    font-size: 1em;
+    height: 13%;
     justify-content: center;
+    margin-top: 30px;
     width: 30%;
 }
 
@@ -200,7 +208,8 @@ body {
 }
 
 .search-text {
-    width: 40vw;
+    display: table-cell;
+    width: 40%;
 }
 
 .smaller {
@@ -209,13 +218,10 @@ body {
 }
 
 .splash {
-    z-index: 9999;
-    background-image: url('../assets/img/Background.png');
-    background-size: 100% 82%;
-    background-repeat: no-repeat;
-    position: absolute;
     height: 100%;
+    text-align: center;
     width: 100%;
+    z-index: 9999;
 
 }
 
@@ -227,7 +233,7 @@ body {
 
 .top-header {
     top: 0;
-    height: 80vh;
+    height: 80%;
     background-image: url('../assets/img/Background2.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -252,8 +258,4 @@ body {
     width: 1000px;
     height: 400px;
     padding-bottom: 20px;
-}
-
-.white {
-    background-color: white;
 }
